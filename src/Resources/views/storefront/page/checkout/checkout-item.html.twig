@@ -1,0 +1,19 @@
+{% sw_extends '@Storefront/page/checkout/checkout-item.html.twig' %}
+
+{% block page_checkout_item_info_image_element %}
+    {{ parent() }}
+    {% if lineItem.payload.url %}
+        <div class="cart-item-img">
+            <a class="cart-item-img-link">
+                <img class="img-fluid cart-item-img" src="{{ lineItem.payload.url }}" alt="custom-image">
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block page_checkout_item_info_label %}
+    {{ parent() }}
+    {% if lineItem.payload.url %}
+        Personal Image // TODO: Translate
+    {% endif %}
+{% endblock %}

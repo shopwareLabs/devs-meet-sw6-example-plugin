@@ -1,0 +1,19 @@
+{% sw_extends '@Storefront/component/checkout/offcanvas-item.html.twig' %}
+
+{% block component_offcanvas_product_image_inner %}
+    {{ parent() }}
+    {% if lineItem.payload.url %}
+        <div class="cart-item-img">
+            <a class="cart-item-img-link">
+                <img class="cart-item-img-source" src="{{ lineItem.payload.url }}" alt="custom-image">
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block component_offcanvas_product_label %}
+    {{ parent() }}
+    {% if lineItem.payload.url %}
+        Personal Image // TODO: Translate
+    {% endif %}
+{% endblock %}

@@ -3,7 +3,6 @@
 {% block page_product_detail_configurator_include %}
     {{ parent() }}
     {% set customFields = page.product.customFields %}
-    {{ dump(customFields) }}
     {% if customFields.personal_product_customizable and customFields.personal_product_attributes %}
         <input type="text"
                name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_UNSPLASH_URL_PARAMETER') }}"
