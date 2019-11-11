@@ -1,0 +1,20 @@
+{% sw_extends '@Storefront/page/product-detail/buy-widget-form.html.twig' %}
+
+{% block page_product_detail_buy_form_inner_csrf %}
+    {% set customFields = page.product.customFields %}
+    {% if customFields.personal_product_customizable and customFields.personal_product_attributes %}
+        {{ sw_csrf('frontend.checkout.personal-product.add') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block page_product_detail_buy_form_action %}{% apply spaceless %}
+    {% set customFields = page.product.customFields %}
+    {% if customFields.personal_product_customizable and customFields.personal_product_attributes %}
+        {{ path('frontend.checkout.personal-product.add') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+    {% endapply %}
+{% endblock %}

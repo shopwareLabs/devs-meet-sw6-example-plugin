@@ -9,8 +9,6 @@ use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 
 class SwagPersonalProduct extends Plugin
 {
-
-
     public function activate(ActivateContext $activateContext): void
     {
         $repo = $this->container->get('custom_field.repository');
@@ -27,4 +25,11 @@ class SwagPersonalProduct extends Plugin
         ], $activateContext->getContext());
     }
 
+    public function getViewPaths(): array
+    {
+        $viewPaths = parent::getViewPaths();
+        $viewPaths[] = 'Resources/views/storefront';
+
+        return $viewPaths;
+    }
 }
