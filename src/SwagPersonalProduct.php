@@ -19,8 +19,17 @@ class SwagPersonalProduct extends Plugin
                 'name' => 'personal_product_customizable',
                 'type' => CustomFieldTypes::BOOL
             ], [
-                'name' => 'personal_product_attributes',
-                'type' => CustomFieldTypes::JSON
+                'name' => 'personal_product_canvasX',
+                'type' => CustomFieldTypes::INT
+            ], [
+                'name' => 'personal_product_canvasY',
+                'type' => CustomFieldTypes::INT
+            ], [
+                'name' => 'personal_product_canvasWidth',
+                'type' => CustomFieldTypes::INT
+            ], [
+                'name' => 'personal_product_canvasHeight',
+                'type' => CustomFieldTypes::INT
             ]
         ], $activateContext->getContext());
     }
