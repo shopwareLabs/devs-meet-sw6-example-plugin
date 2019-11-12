@@ -6,12 +6,12 @@
         <div data-personal-product-viewer
              data-personal-product-viewer-options='
              {
-                "x":{{ customFields.personal_product_canvasX }},
-                "y":{{ customFields.personal_product_canvasY }},
-                "width":{{ customFields.personal_product_canvasWidth }},
-                "height":{{ customFields.personal_product_canvasHeight }}
+                "x0":{{ customFields.personal_product_canvasX0 }},
+                "y0":{{ customFields.personal_product_canvasY0 }},
+                "x1":{{ customFields.personal_product_canvasX1 }},
+                "y1":{{ customFields.personal_product_canvasY1 }}
              }'>
-            {{ dump(customFields) }}
+            {{ dump(page.product.media.first().media.metaData) }}
             <canvas style="position: absolute"
                     data-personal-overlay
                     width="{{ page.product.media.first().media.metaData.width }}"
