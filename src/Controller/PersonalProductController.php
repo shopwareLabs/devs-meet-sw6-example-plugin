@@ -87,8 +87,9 @@ class PersonalProductController extends StorefrontController
             $productQuantity
         );
 
-        $productLineItem->setPayloadValue('url', $unsplashUrl);
-
+        $productLineItem->setPayloadValue('url', $unsplashUrl)
+            ->setRemovable(true)
+            ->setStackable(true);
 
         return $productLineItem;
     }

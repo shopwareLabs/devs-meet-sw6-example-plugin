@@ -2,7 +2,7 @@
 
 {% block page_product_detail_buy_form_inner_csrf %}
     {% set customFields = page.product.customFields %}
-    {% if customFields.personal_product_customizable and customFields.personal_product_attributes %}
+    {% if customFields.personal_product_customizable %}
         {{ sw_csrf('frontend.checkout.personal-product.add') }}
     {% else %}
         {{ parent() }}
@@ -11,7 +11,7 @@
 
 {% block page_product_detail_buy_form_action %}{% apply spaceless %}
     {% set customFields = page.product.customFields %}
-    {% if customFields.personal_product_customizable and customFields.personal_product_attributes %}
+    {% if customFields.personal_product_customizable %}
         {{ path('frontend.checkout.personal-product.add') }}
     {% else %}
         {{ parent() }}
