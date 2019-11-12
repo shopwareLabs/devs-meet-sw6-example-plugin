@@ -40,7 +40,6 @@ Shopware.Component.register('personal-product-canvas', {
         isLoading(newValue) {
             if (!newValue && this.isCustomizable) {
                 this.initializeCanvas();
-
             }
         }
     },

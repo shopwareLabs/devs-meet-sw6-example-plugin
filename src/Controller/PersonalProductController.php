@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PersonalProductController extends StorefrontController
 {
 
-    public const PERSONAL_PRODUCT_REQUEST_UNSPLASH_URL_PARAMETER = 'personal-product-unsplash-url';
+    public const PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER = 'personal-product-image-url';
 
     /**
      * @var CartService
@@ -47,10 +47,10 @@ class PersonalProductController extends StorefrontController
     ): Response
     {
         /** @var string|null $unsplashUrl */
-        $unsplashUrl = $requestDataBag->get(self::PERSONAL_PRODUCT_REQUEST_UNSPLASH_URL_PARAMETER);
+        $unsplashUrl = $requestDataBag->get(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
 
         if ($unsplashUrl === null) {
-            throw new MissingRequestParameterException(self::PERSONAL_PRODUCT_REQUEST_UNSPLASH_URL_PARAMETER);
+            throw new MissingRequestParameterException(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
         }
 
         $lineItems = $request->request->get('lineItems', []);

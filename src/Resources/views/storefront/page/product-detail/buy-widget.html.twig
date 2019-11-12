@@ -4,9 +4,13 @@
     {{ parent() }}
     {% set customFields = page.product.customFields %}
     {% if customFields.personal_product_customizable %}
-        <input type="text"
-               name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_UNSPLASH_URL_PARAMETER') }}"
-               value=""
-               form="productDetailPageBuyProductForm">
+        <div data-image-changer="true"
+                data-image-changer-options='"fetchRoute": "{{ path('frontend.checkout.personal-product.add') }}"'>
+            <input type="text"
+                   name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER') }}"
+                   value=""
+                   form="productDetailPageBuyProductForm">
+            <button class="fetch-button btn btn-info">Fetch new picture</button>
+        </div>
     {% endif %}
 {% endblock %}
