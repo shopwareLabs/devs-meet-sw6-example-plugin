@@ -4,7 +4,7 @@
             label="Product can be customized"
             v-model="product.customFields.personal_product_customizable">
         </sw-switch-field>
-        <sw-container columns="1fr 1fr" v-if="product.customFields.personal_product_customizable">
+        <sw-container columns="1fr 1fr" gap="0 20px" v-if="product.customFields.personal_product_customizable">
             <sw-number-field
                 label="Canvas X"
                 v-model="product.customFields.personal_product_canvasX">

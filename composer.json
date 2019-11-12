@@ -1,6 +1,6 @@
 {
   "name": "swag/plugin-skeleton",
-  "description": "Skeleton plugin",
+  "description": "Personal product",
   "type": "shopware-platform-plugin",
   "license": "MIT",
   "autoload": {
@@ -11,8 +11,8 @@
   "extra": {
     "shopware-plugin-class": "SwagPersonalProduct\\SwagPersonalProduct",
     "label": {
-      "de-DE": "Skeleton plugin",
-      "en-GB": "Skeleton plugin"
+      "de-DE": "Personal product",
+      "en-GB": "Personal product"
     }
   }
 }
