@@ -5,6 +5,7 @@ namespace SwagPersonalProduct\Controller;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Framework\Api\Response\JsonApiResponse;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -74,6 +75,21 @@ class PersonalProductController extends StorefrontController
         return $this->createActionResponse($request);
 
     }
+
+    /**
+     * @Route("/checkout/personal-product/getPersonalImage", name="frontend.checkout.personal-product.add", methods={"get"}, defaults={"XmlHttpRequest"=true})
+     *
+     */
+    public function getPersonalImage(
+        Cart $cart,
+        RequestDataBag $requestDataBag,
+        Request $request,
+        SalesChannelContext $salesChannelContext
+    ): Response
+    {
+        return new JsonApiResponse(['url' => '']);
+    }
+
 
     private function createPersonalProductLineItem(
         string $unsplashUrl,
