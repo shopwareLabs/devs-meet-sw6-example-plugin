@@ -1,0 +1,11 @@
+{% block personal_product_preview_modal %}
+    <sw-modal title="Preview" variant="large" class="personal-product-preview-modal" @modal-close="$emit('modal-close')">
+        <template v-if="product">
+            <div class="media-canvas-outer">
+                <div class="media-canvas-inner">
+                    <canvas ref="canvas" class="canvas"></canvas>
+                </div>
+            </div>
+        </template>
+    </sw-modal>
+{% endblock %}
