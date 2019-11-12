@@ -5,10 +5,10 @@
             v-model="isCustomizable">
         </sw-switch-field>
 
-        <sw-container columns="2fr 1fr" v-if="isCustomizable">
+        <sw-container columns="2fr 1fr" v-if="isCustomizable || false">
             <div class="media-canvas-outer">
                 <div class="media-canvas-inner">
-                    <img :src="product.media.first().media.url" class="cover">
+{#                    <img :src="product.media.first().media.url" class="cover">#}
                     <canvas ref="canvas" class="canvas" @click="onClickCanvas"></canvas>
                 </div>
             </div>

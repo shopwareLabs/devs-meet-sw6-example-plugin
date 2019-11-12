@@ -28,21 +28,40 @@ Shopware.Component.register('personal-product-canvas', {
             },
             set(value) {
                 this.$set(this.product.customFields, 'personal_product_customizable', value);
+                if (value) this.initializeCanvas();
+            }
+        }
+    },
+
+    created() {
+    },
+
+    watch: {
+        isLoading(newValue) {
+            if (!newValue && this.isCustomizable) {
+                this.initializeCanvas();
+
             }
         }
     },
 
     methods: {
+        initializeCanvas() {
+            this.$nextTick(() => {
+                // Set canvas attributes to the actual picture size
+                const meta = this.product.media.first().media.metaData;
+                this.$refs.canvas.width = meta.width;
+                this.$refs.canvas.height = meta.height;
+                this.updateCanvasRect();
+            });
+        },
+
         setCustomField(x,y, position) {
             this.$set(this.product.customFields, `personal_product_canvasX${position}`, x);
             this.$set(this.product.customFields, `personal_product_canvasY${position}`, y);
         },
 
         onClickCanvas(e) {
-            // Set canvas attributes to the actual picture size
-            const meta = this.product.media.first().media.metaData;
-            this.$refs.canvas.width = meta.width;
-            this.$refs.canvas.height = meta.height;
             const rect = this.$refs.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -57,6 +76,7 @@ Shopware.Component.register('personal-product-canvas', {
         },
 
         setPosition(x, y) {
+            console.log('x,y,this.setPosKey : ', x,y,this.setPosKey);
             this.setCustomField(Math.ceil(x), Math.ceil(y), this.setPosKey);
             this.setPosKey = + !this.setPosKey;
 
@@ -68,14 +88,20 @@ Shopware.Component.register('personal-product-canvas', {
             // clear canvas
             context.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
 
-            // draw a rect for the selected size
-            context.fillStyle = "rgba(69,55,194,0.4)";
-            context.fillRect(
-                this.product.customFields.personal_product_canvasX0,
-                this.product.customFields.personal_product_canvasY0,
-                this.product.customFields.personal_product_canvasX1 - this.product.customFields.personal_product_canvasX0,
-                this.product.customFields.personal_product_canvasY1 - this.product.customFields.personal_product_canvasY0
-            );
+            const img = new Image();
+            img.src = this.product.media.first().media.url;
+            img.onload = () => {
+                context.drawImage(img, 0, 0);
+
+                // draw a rect for the selected size
+                context.fillStyle = "rgba(69,55,194,0.4)";
+                context.fillRect(
+                    this.product.customFields.personal_product_canvasX0,
+                    this.product.customFields.personal_product_canvasY0,
+                    this.product.customFields.personal_product_canvasX1 - this.product.customFields.personal_product_canvasX0,
+                    this.product.customFields.personal_product_canvasY1 - this.product.customFields.personal_product_canvasY0
+                );
+            };
         },
 
         onClickReset() {
