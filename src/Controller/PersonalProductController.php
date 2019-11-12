@@ -77,7 +77,7 @@ class PersonalProductController extends StorefrontController
     }
 
     /**
-     * @Route("/personal-product/getPersonalImage", name="frontend.checkout.personal-product.add", methods={"get"}, defaults={"XmlHttpRequest"=true})
+     * @Route("/personal-product/getPersonalImage", name="frontend.personal-product.get-image", methods={"get"}, defaults={"XmlHttpRequest"=true})
      *
      */
     public function getPersonalImage(
