@@ -1,0 +1,25 @@
+{% sw_extends '@Storefront/page/product-detail/index.html.twig' %}
+
+{% block page_product_detail_media %}
+    {% set customFields = page.product.customFields %}
+    {% if customFields.personal_product_customizable %}
+        <div data-personal-product-viewer
+             data-personal-product-viewer-options='
+             {
+                "x":{{ customFields.personal_product_canvasX }},
+                "y":{{ customFields.personal_product_canvasY }},
+                "width":{{ customFields.personal_product_canvasWidth }},
+                "height":{{ customFields.personal_product_canvasHeight }}
+             }'>
+            {{ dump(customFields) }}
+            <canvas style="position: absolute"
+                    data-personal-overlay
+                    width="{{ page.product.media.first().media.metaData.width }}"
+                    height="{{ page.product.media.first().media.metaData.height }}">
+                </canvas>
+            <img data-base-image src="{{page.product.media.first().media.url}}">
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
