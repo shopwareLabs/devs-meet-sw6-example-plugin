@@ -1,0 +1,13 @@
+{% sw_extends '@Storefront/component/listing/filter-panel.html.twig' %}
+
+{% block component_filter_panel_item_shipping_free %}
+    {{ parent() }}
+
+    {# @var listing \Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult #}
+    {% if listing.aggregations.get('customizable-only') %}
+        {% sw_include '@Storefront/component/listing/filter/filter-boolean.html.twig' with {
+            name: 'customizable-only',
+            displayName: 'Only Customizable'
+        } %}
+    {% endif %}
+{% endblock %}
