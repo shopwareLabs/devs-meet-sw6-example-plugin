@@ -2,6 +2,7 @@
 
 namespace SwagPersonalProduct\Controller;
 
+use GuzzleHttp\Client;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
@@ -119,7 +120,11 @@ class PersonalProductController extends StorefrontController
         $width = $this->roundToTens($width);
         $height = $this->roundToTens($height);
 
-        return new JsonApiResponse(['url' => 'https://picsum.photos/'. $width . '/' . $height]);
+        $client = new Client(['allow_redirects' => false]);
+
+        $location = $client->request('GET', 'https://picsum.photos/' . $width . '/' . $height)->getHeader('location')[0];
+
+        return new JsonApiResponse(['url' => 'https://picsum.photos'.$location]);
     }
 
     private function roundToTens($n): int
