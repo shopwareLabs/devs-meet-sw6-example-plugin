@@ -6,15 +6,16 @@
     {% if customFields.personal_product_customizable %}
         <div data-image-changer="true"
              data-image-changer-options='{"fetchRoute": "{{ path('frontend.personal-product.get-image') }}?id={{ page.product.id }}"}'>
-        <input type="text"
+            <input type="text"
                    name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER') }}"
                    value=""
                    placeholder="Image url for customization..."
-                   class="form-control">
+                   class="form-control personal-product-input">
             <input type="button"
                    class="personal-product-button btn btn-secondary btn-block"
                    value="Fetch new picture">
         </div>
+
         {{ sw_csrf('frontend.checkout.personal-product.add') }}
     {% else %}
         {{ parent() }}

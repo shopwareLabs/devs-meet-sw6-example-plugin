@@ -8,8 +8,8 @@ export default class ImageChanger extends Plugin {
     };
 
     init() {
-        this.client = new HttpClient(window.accessKey, window.contextToken);
-        this._input = DomAccess.querySelector(this.el, 'input[name=\'personal-product-image-url\']');
+        this._client = new HttpClient(window.accessKey, window.contextToken);
+        this._input = DomAccess.querySelector(this.el, '.personal-product-input');
         this._button = DomAccess.querySelector(this.el, '.personal-product-button');
         this.addEventListener();
     }
@@ -22,7 +22,7 @@ export default class ImageChanger extends Plugin {
     }
 
     onClickFetch() {
-        this.client.get(this.options.fetchRoute, this.onFetchedImage.bind(this));
+        this._client.get(this.options.fetchRoute, this.onFetchedImage.bind(this));
     }
 
     onFetchedImage(response) {

@@ -33,12 +33,4 @@ class SwagPersonalProduct extends Plugin
             ]
         ], $activateContext->getContext());
     }
-
-    public function getViewPaths(): array
-    {
-        $viewPaths = parent::getViewPaths();
-        $viewPaths[] = 'Resources/views/storefront';
-
-        return $viewPaths;
-    }
 }

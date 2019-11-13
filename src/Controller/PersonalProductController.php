@@ -56,10 +56,10 @@ class PersonalProductController extends StorefrontController
         SalesChannelContext $salesChannelContext
     ): Response
     {
-        /** @var string|null $unsplashUrl */
-        $unsplashUrl = $requestDataBag->get(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
+        /** @var string|null $imageUrl */
+        $imageUrl = $requestDataBag->get(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
 
-        if ($unsplashUrl === null) {
+        if ($imageUrl === null) {
             throw new MissingRequestParameterException(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
         }
 
@@ -73,7 +73,7 @@ class PersonalProductController extends StorefrontController
         $productQuantity = (int)$product['quantity'];
 
         $personalProductLineItem = $this->createPersonalProductLineItem(
-            $unsplashUrl,
+            $imageUrl,
             $product['id'],
             $productQuantity
         );
@@ -88,7 +88,6 @@ class PersonalProductController extends StorefrontController
 
     /**
      * @Route("/personal-product/getPersonalImage", name="frontend.personal-product.get-image", methods={"GET"}, defaults={"XmlHttpRequest"=true})
-     *
      */
     public function getPersonalImage(
         RequestDataBag $requestDataBag,
@@ -135,7 +134,7 @@ class PersonalProductController extends StorefrontController
 
 
     private function createPersonalProductLineItem(
-        string $unsplashUrl,
+        string $imageUrl,
         string $productId,
         int $productQuantity
     ): LineItem {
@@ -146,7 +145,7 @@ class PersonalProductController extends StorefrontController
             $productQuantity
         );
 
-        $productLineItem->setPayloadValue('url', $unsplashUrl)
+        $productLineItem->setPayloadValue('url', $imageUrl)
             ->setRemovable(true)
             ->setStackable(true);
 

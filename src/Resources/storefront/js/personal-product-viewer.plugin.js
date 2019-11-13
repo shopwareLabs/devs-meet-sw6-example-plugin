@@ -15,7 +15,7 @@ export default class PersonalProductViewer extends Plugin {
         this._canvas = DomAccess.querySelector(this.el, '.personal-product-canvas');
         this._canvasContext = this._canvas.getContext('2d');
 
-        this.addEventListener();
+        this.subscribeImageChangedEvent();
 
         this._baseImage = this.createImage(this.options.baseImage, () => {
             this.drawBaseImage();
@@ -23,7 +23,7 @@ export default class PersonalProductViewer extends Plugin {
         });
     }
 
-    addEventListener() {
+    subscribeImageChangedEvent() {
         // Subscribe to image changer plugin event
         const imageChangerEl = DomAccess.querySelector(document, '[data-image-changer]');
         const imageChangerInstance = this.PluginManager.getPluginInstanceFromElement(imageChangerEl, 'ImageChanger');

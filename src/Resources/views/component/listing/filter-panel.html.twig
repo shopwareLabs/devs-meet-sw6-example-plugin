@@ -7,7 +7,7 @@
     {% if listing.aggregations.get('customizable-only') %}
         {% sw_include '@Storefront/component/listing/filter/filter-boolean.html.twig' with {
             name: 'customizable-only',
-            displayName: 'Only Customizable'
+            displayName: 'Only customizable'
         } %}
     {% endif %}
 {% endblock %}
