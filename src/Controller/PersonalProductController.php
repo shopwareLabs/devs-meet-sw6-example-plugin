@@ -77,17 +77,16 @@ class PersonalProductController extends StorefrontController
     }
 
     /**
-     * @Route("/personal-product/getPersonalImage", name="frontend.personal-product.get-image", methods={"get"}, defaults={"XmlHttpRequest"=true})
+     * @Route("/personal-product/getPersonalImage", name="frontend.personal-product.get-image", methods={"GET"}, defaults={"XmlHttpRequest"=true})
      *
      */
     public function getPersonalImage(
-        Cart $cart,
         RequestDataBag $requestDataBag,
         Request $request,
         SalesChannelContext $salesChannelContext
     ): Response
     {
-        return new JsonApiResponse(['url' => '']);
+        return new JsonApiResponse(['url' => 'https://picsum.photos/200/300']);
     }
 
 

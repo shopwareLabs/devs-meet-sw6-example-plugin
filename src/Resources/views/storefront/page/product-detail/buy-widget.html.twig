@@ -5,7 +5,7 @@
     {% set customFields = page.product.customFields %}
     {% if customFields.personal_product_customizable %}
         <div data-image-changer="true"
-                data-image-changer-options='"fetchRoute": "{{ path('frontend.checkout.personal-product.add') }}"'>
+                data-image-changer-options='{"fetchRoute": "{{ path('frontend.personal-product.get-image') }}"}'>
             <input type="text"
                    name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER') }}"
                    value=""
