@@ -8,10 +8,14 @@
         <service id="SwagPersonalProduct\Controller\PersonalProductController" public="true">
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="product.repository"/>
+            <argument type="service" id="SwagPersonalProduct\Service\ImageGuesser"/>
         </service>
 
         <service id="SwagPersonalProduct\Core\ProductFilterSubscriber">
             <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="SwagPersonalProduct\Service\ImageGuesser">
         </service>
     </services>
 </container>

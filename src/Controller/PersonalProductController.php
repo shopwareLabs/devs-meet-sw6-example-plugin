@@ -16,6 +16,7 @@ use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Controller\StorefrontController;
+use SwagPersonalProduct\Service\ImageGuesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,10 +39,16 @@ class PersonalProductController extends StorefrontController
      */
     private $productRepo;
 
-    public function __construct(CartService $cartService, EntityRepositoryInterface $productRepo)
+    /**
+     * @var ImageGuesser
+     */
+    private $imageGuesser;
+
+    public function __construct(CartService $cartService, EntityRepositoryInterface $productRepo, ImageGuesser $imageGuesser)
     {
         $this->cartService = $cartService;
         $this->productRepo = $productRepo;
+        $this->imageGuesser = $imageGuesser;
     }
 
     /**
@@ -86,53 +93,6 @@ class PersonalProductController extends StorefrontController
 
     }
 
-    /**
-     * @Route("/personal-product/getPersonalImage", name="frontend.personal-product.get-image", methods={"GET"}, defaults={"XmlHttpRequest"=true})
-     */
-    public function getPersonalImage(
-        RequestDataBag $requestDataBag,
-        Request $request,
-        SalesChannelContext $salesChannelContext
-    ): Response
-    {
-        if(!$request->query->has('id'))
-        {
-            return new JsonApiResponse(['url' => 'https://picsum.photos/200/300']);
-        }
-
-        $id = (string) $request->query->get('id');
-
-        $criteria = new Criteria([$id]);
-
-        /** @var ProductEntity $product */
-        $product = $this->productRepo->search($criteria, $salesChannelContext->getContext())->first();
-
-        $customFields = $product->getCustomFields();
-
-        $x0 = $customFields['personal_product_canvasX0'];
-        $y0 = $customFields['personal_product_canvasY0'];
-        $x1 = $customFields['personal_product_canvasX1'];
-        $y1 = $customFields['personal_product_canvasY1'];
-
-        $width = abs($x1-$x0);
-        $height = abs($y1-$y0);
-        $width = $this->roundToTens($width);
-        $height = $this->roundToTens($height);
-
-        $client = new Client(['allow_redirects' => false]);
-
-        $location = $client->request('GET', 'https://picsum.photos/' . $width . '/' . $height)->getHeader('location')[0];
-
-        return new JsonApiResponse(['url' => 'https://picsum.photos'.$location]);
-    }
-
-    private function roundToTens($n): int
-    {
-        $n = $n / 10;
-        return (int) (round($n) * 10);
-    }
-
-
     private function createPersonalProductLineItem(
         string $imageUrl,
         string $productId,
@@ -150,5 +110,55 @@ class PersonalProductController extends StorefrontController
             ->setStackable(true);
 
         return $productLineItem;
+    }
+
+    /**
+     * @Route("/personal-product/{id}/personal-image", name="frontend.personal-product.get-image", methods={"GET"}, defaults={"XmlHttpRequest"=true})
+     */
+    public function getPersonalImage(
+        RequestDataBag $requestDataBag,
+        Request $request,
+        SalesChannelContext $salesChannelContext,
+        string $id
+    ): Response
+    {
+        $criteria = new Criteria([$id]);
+
+        /** @var ProductEntity $product */
+        $product = $this->productRepo->search($criteria, $salesChannelContext->getContext())->first();
+
+        $width = $this->getPersonalImageWidth($product);
+
+        $height = $this->getPersonalImageHeight($product);
+
+        $url = $this->imageGuesser->fetchRandomImageUrl($width, $height);
+
+        return new JsonApiResponse(['url' => $url]);
+    }
+
+    private function getPersonalImageWidth(ProductEntity $product): int
+    {
+        $customFields = $product->getCustomFields();
+
+        $x0 = $customFields['personal_product_canvasX0'];
+        $x1 = $customFields['personal_product_canvasX1'];
+        $width = abs($x1 - $x0);
+        return $this->roundToTens($width);
+    }
+
+    private function getPersonalImageHeight(ProductEntity $product): int
+    {
+        $customFields = $product->getCustomFields();
+
+        $y0 = $customFields['personal_product_canvasY0'];
+        $y1 = $customFields['personal_product_canvasY1'];
+        $height = abs($y1 - $y0);
+        return $this->roundToTens($height);
+    }
+
+    private function roundToTens($n): int
+    {
+        $n = $n / 10;
+        return (int) (round($n) * 10);
     }
 }
