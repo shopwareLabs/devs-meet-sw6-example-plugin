@@ -5,7 +5,10 @@ namespace SwagPersonalProduct\Controller;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Api\Response\JsonApiResponse;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -29,9 +32,15 @@ class PersonalProductController extends StorefrontController
      */
     private $cartService;
 
-    public function __construct(CartService $cartService)
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $productRepo;
+
+    public function __construct(CartService $cartService, EntityRepositoryInterface $productRepo)
     {
         $this->cartService = $cartService;
+        $this->productRepo = $productRepo;
     }
 
     /**
@@ -86,7 +95,37 @@ class PersonalProductController extends StorefrontController
         SalesChannelContext $salesChannelContext
     ): Response
     {
-        return new JsonApiResponse(['url' => 'https://picsum.photos/200/300']);
+        if(!$request->query->has('id'))
+        {
+            return new JsonApiResponse(['url' => 'https://picsum.photos/200/300']);
+        }
+
+        $id = (string) $request->query->get('id');
+
+        $criteria = new Criteria([$id]);
+
+        /** @var ProductEntity $product */
+        $product = $this->productRepo->search($criteria, $salesChannelContext->getContext())->first();
+
+        $customFields = $product->getCustomFields();
+
+        $x0 = $customFields['personal_product_canvasX0'];
+        $y0 = $customFields['personal_product_canvasY0'];
+        $x1 = $customFields['personal_product_canvasX1'];
+        $y1 = $customFields['personal_product_canvasY1'];
+
+        $width = abs($x1-$x0);
+        $height = abs($y1-$y0);
+        $width = $this->roundToTens($width);
+        $height = $this->roundToTens($height);
+
+        return new JsonApiResponse(['url' => 'https://picsum.photos/'. $width . '/' . $height]);
+    }
+
+    private function roundToTens($n): int
+    {
+        $n = $n / 10;
+        return (int) (round($n) * 10);
     }
 
 
