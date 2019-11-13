@@ -1,4 +1,5 @@
 import Plugin from 'src/script/plugin-system/plugin.class';
+import DomAccess from 'src/script/helper/dom-access.helper';
 
 export default class PersonalProductViewer extends Plugin {
     static options = {
@@ -10,37 +11,70 @@ export default class PersonalProductViewer extends Plugin {
     };
 
     init() {
-        const canvas = this.el.querySelector('[data-personal-overlay]');
-        console.log(canvas);
-        const ctx = canvas.getContext('2d');
-        const baseImg = new Image();
-        baseImg.onload = () => {
-            ctx.fillStyle = 'rgba(200, 20, 100, 0.9)';
-            ctx.drawImage(baseImg,0, 0);
-            ctx.fillRect(
+        this.PluginManager= window.PluginManager;
+        this._canvas = DomAccess.querySelector(this.el, '.personal-product-canvas');
+        this._canvasContext = this._canvas.getContext('2d');
+
+        this.addEventListener();
+
+        this._baseImage = this.createImage(this.options.baseImage, () => {
+            this.drawBaseImage();
+            this.drawOverlay();
+        });
+    }
+
+    addEventListener() {
+        // Subscribe to image changer plugin event
+        const imageChangerEl = DomAccess.querySelector(document, '[data-image-changer]');
+        const imageChangerInstance = this.PluginManager.getPluginInstanceFromElement(imageChangerEl, 'ImageChanger');
+        imageChangerInstance.$emitter.subscribe('imageChanged', this.onChangeImage.bind(this));
+    }
+
+    onChangeImage({ detail }) {
+        this.resetCanvas();
+        const overlayImage = this.createImage(detail, () => {
+            this.drawBaseImage();
+            this.drawOverlay(overlayImage);
+        });
+
+    }
+
+    createImage(imageSrc, loadedCallbackFn) {
+        const image = new Image();
+        image.addEventListener('load', loadedCallbackFn);
+        image.src = imageSrc;
+
+        return image;
+    }
+
+    drawBaseImage() {
+        // Put the image in the canvas
+        this._canvasContext.drawImage(this._baseImage,0, 0);
+    }
+
+    drawOverlay(image = null) {
+        if (image) {
+            // Draw the overlay image to the canvas
+            this._canvasContext.drawImage(
+                image,
                 this.options.x0,
                 this.options.y0,
                 this.options.x1 - this.options.x0,
                 this.options.y1 - this.options.y0,
             );
-
-            this.urlInput = document.querySelector('input[name=\'personal-product-image-url\']');
-
-            this.urlInput.oninput = (ev) => {
-                const img = new Image();
-                img.onload = () => {
-                    ctx.drawImage(
-                        img,
-                        this.options.x0,
-                        this.options.y0,
-                        this.options.x1 - this.options.x0,
-                        this.options.y1 - this.options.y0,
-                    );
-                };
-                console.log(ev);
-                img.src = ev.target.value;
-            }
+        } else {
+            // Draw a placeholder overlay to the canvas
+            this._canvasContext.fillStyle = 'rgba(69, 55, 194, 0.4)';
+            this._canvasContext.fillRect(
+                this.options.x0,
+                this.options.y0,
+                this.options.x1 - this.options.x0,
+                this.options.y1 - this.options.y0,
+            );
         }
-        baseImg.src = this.options.baseImage;
+    }
+
+    resetCanvas() {
+        this._canvasContext.clearRect(0, 0, this._canvas.width, this._canvas.height);
     }
 }

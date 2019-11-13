@@ -1,20 +1,30 @@
 {% sw_extends '@Storefront/page/product-detail/buy-widget-form.html.twig' %}
 
+{% set customFields = page.product.customFields %}
+
 {% block page_product_detail_buy_form_inner_csrf %}
-    {% set customFields = page.product.customFields %}
     {% if customFields.personal_product_customizable %}
+        <div data-image-changer="true"
+             data-image-changer-options='{"fetchRoute": "{{ path('frontend.personal-product.get-image') }}?id={{ page.product.id }}"}'>
+        <input type="text"
+                   name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER') }}"
+                   value=""
+                   placeholder="Image url for customization..."
+                   class="form-control">
+            <input type="button"
+                   class="personal-product-button btn btn-secondary btn-block"
+                   value="Fetch new picture">
+        </div>
         {{ sw_csrf('frontend.checkout.personal-product.add') }}
     {% else %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
 
-{% block page_product_detail_buy_form_action %}{% apply spaceless %}
-    {% set customFields = page.product.customFields %}
+{% block page_product_detail_buy_form_action %}
     {% if customFields.personal_product_customizable %}
         {{ path('frontend.checkout.personal-product.add') }}
     {% else %}
         {{ parent() }}
     {% endif %}
-    {% endapply %}
 {% endblock %}

@@ -5,10 +5,9 @@
             v-model="isCustomizable">
         </sw-switch-field>
 
-        <sw-container columns="2fr 1fr" v-if="isCustomizable || false">
+        <sw-container columns="2fr 1fr" v-if="isCustomizable">
             <div class="media-canvas-outer">
                 <div class="media-canvas-inner">
-{#                    <img :src="product.media.first().media.url" class="cover">#}
                     <canvas ref="canvas" class="canvas" @click="onClickCanvas"></canvas>
                 </div>
             </div>
@@ -16,22 +15,22 @@
             <div>
                 <sw-number-field
                     label="Canvas X0"
-                    v-model="product.customFields.personal_product_canvasX0">
+                    v-model="canvasX0">
                 </sw-number-field>
 
                 <sw-number-field
                     label="Canvas Y0"
-                    v-model="product.customFields.personal_product_canvasY0">
+                    v-model="canvasY0">
                 </sw-number-field>
 
                 <sw-number-field
-                    label="Canvas X1"
-                    v-model="product.customFields.personal_product_canvasX1">
+                    label="Canva Width"
+                    v-model="canvasWidth">
                 </sw-number-field>
 
                 <sw-number-field
-                    label="Canvas Y1"
-                    v-model="product.customFields.personal_product_canvasY1">
+                    label="Canvas Height"
+                    v-model="canvasHeight">
                 </sw-number-field>
 
                 <sw-button @click="onClickReset" variant="primary">
@@ -39,9 +38,5 @@
                 </sw-button>
             </div>
         </sw-container>
-
-
-
-
     </div>
 {% endblock %}

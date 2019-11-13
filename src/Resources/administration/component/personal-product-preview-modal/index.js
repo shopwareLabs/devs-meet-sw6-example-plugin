@@ -1,4 +1,5 @@
 import template from './personal-product-preview-modal.html.twig';
+import './personal-product-preview-modal.scss';
 
 const { Criteria } = Shopware.Data;
 
@@ -44,7 +45,7 @@ Shopware.Component.register('personal-product-preview-modal', {
             criteria.addAssociation('media');
 
             this.productRepository.search(criteria, this.apiContext).then(products => {
-                this.product = products[0];
+                this.product = products.first();
                 this.$nextTick(() => this.drawCanvas());
             });
         },

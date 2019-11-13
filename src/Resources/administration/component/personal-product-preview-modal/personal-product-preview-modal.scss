@@ -1,7 +1,8 @@
 @import "~scss/variables";
 
-.personal-product-canvas {
+.personal-product-preview-modal {
     .media-canvas-outer {
+        height: 500px;
         margin: 20px;
         border: 2px solid $color-kashmir;
     }

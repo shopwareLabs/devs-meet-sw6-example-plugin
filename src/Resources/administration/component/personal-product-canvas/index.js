@@ -30,10 +30,37 @@ Shopware.Component.register('personal-product-canvas', {
                 this.$set(this.product.customFields, 'personal_product_customizable', value);
                 if (value) this.initializeCanvas();
             }
-        }
-    },
+        },
 
-    created() {
+        canvasX0: {
+            get(){ return this.get('X0') }, set(value) { this.set(value, 'X0') }
+        },
+
+        canvasX1: {
+            get(){ return this.get('X1') }, set(value) { this.set(value, 'X1') }
+        },
+
+        canvasY0: {
+            get(){ return this.get('Y0') }, set(value) { this.set(value, 'Y0') }
+        },
+
+        canvasY1: {
+            get(){ return this.get('Y1') }, set(value) { this.set(value, 'Y1') }
+        },
+
+        canvasWidth: {
+            get() { return this.canvasX1 - this.canvasX0 || 0; },
+            set(value) {
+                this.canvasX1 = this.canvasX0 + value;
+            }
+        },
+
+        canvasHeight: {
+            get() { return this.canvasY1 - this.canvasY0 || 0; },
+            set(value) {
+                this.canvasY1 = this.canvasY0 + value;
+            }
+        }
     },
 
     watch: {
@@ -45,6 +72,15 @@ Shopware.Component.register('personal-product-canvas', {
     },
 
     methods: {
+        get(param) {
+            return this.product.customFields[`personal_product_canvas${param}`] || 0;
+        },
+
+        set(value, param) {
+            this.$set(this.product.customFields, `personal_product_canvas${param}`, value);
+            this.updateCanvasRect();
+        },
+
         initializeCanvas() {
             this.$nextTick(() => {
                 // Set canvas attributes to the actual picture size
@@ -53,11 +89,6 @@ Shopware.Component.register('personal-product-canvas', {
                 this.$refs.canvas.height = meta.height;
                 this.updateCanvasRect();
             });
-        },
-
-        setCustomField(x,y, position) {
-            this.$set(this.product.customFields, `personal_product_canvasX${position}`, x);
-            this.$set(this.product.customFields, `personal_product_canvasY${position}`, y);
         },
 
         onClickCanvas(e) {
@@ -75,11 +106,10 @@ Shopware.Component.register('personal-product-canvas', {
         },
 
         setPosition(x, y) {
-            console.log('x,y,this.setPosKey : ', x,y,this.setPosKey);
-            this.setCustomField(Math.ceil(x), Math.ceil(y), this.setPosKey);
-            this.setPosKey = + !this.setPosKey;
+            this[`canvasX${this.setPosKey}`] = Math.ceil(x);
+            this[`canvasY${this.setPosKey}`] = Math.ceil(y);
 
-            this.updateCanvasRect();
+            this.setPosKey = + !this.setPosKey;
         },
 
         updateCanvasRect() {
@@ -88,24 +118,27 @@ Shopware.Component.register('personal-product-canvas', {
             context.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
 
             const img = new Image();
-            img.src = this.product.media.first().media.url;
             img.onload = () => {
                 context.drawImage(img, 0, 0);
 
                 // draw a rect for the selected size
                 context.fillStyle = "rgba(69,55,194,0.4)";
                 context.fillRect(
-                    this.product.customFields.personal_product_canvasX0,
-                    this.product.customFields.personal_product_canvasY0,
-                    this.product.customFields.personal_product_canvasX1 - this.product.customFields.personal_product_canvasX0,
-                    this.product.customFields.personal_product_canvasY1 - this.product.customFields.personal_product_canvasY0
+                    this.canvasX0,
+                    this.canvasY0,
+                    this.canvasX1 - this.canvasX0,
+                    this.canvasY1 - this.canvasY0
                 );
             };
+            img.src = this.product.media.first().media.url;
         },
 
         onClickReset() {
-            this.setCustomField(0, 0, 0);
-            this.setCustomField(0, 0, 1);
+            this.canvasX0 = 0;
+            this.canvasX1 = 0;
+            this.canvasY0 = 0;
+            this.canvasY1 = 0;
+            this.setPosKey = 0;
             this.updateCanvasRect();
         }
     }

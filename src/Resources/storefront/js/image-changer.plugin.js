@@ -4,29 +4,34 @@ import HttpClient from 'src/script/service/http-client.service';
 
 export default class ImageChanger extends Plugin {
     static options = {
-        fetchRoute: '',    
+        fetchRoute: '',
     };
-    
+
     init() {
         this.client = new HttpClient(window.accessKey, window.contextToken);
+        this._input = DomAccess.querySelector(this.el, 'input[name=\'personal-product-image-url\']');
+        this._button = DomAccess.querySelector(this.el, '.personal-product-button');
         this.addEventListener();
     }
 
     addEventListener() {
-        const button = DomAccess.querySelector(this.el, '.fetch-button');
-
-        button.addEventListener('click', this.onClickFetch.bind(this));
+        this._button.addEventListener('click', this.onClickFetch.bind(this));
+        this._input.addEventListener('input', (event) => {
+            this.publishChangedEvent(event.target.value);
+        });
     }
 
     onClickFetch() {
-        console.log('button click : ');
-        console.log('this.options.fetchRoute : ', this.options.fetchRoute);
-        
-        this.client.get(this.options.fetchRoute, onFetchedImage.bind(this));
-    }
-    
-    onFetchedImage(response) {
-        console.log('response : ', response);
+        this.client.get(this.options.fetchRoute, this.onFetchedImage.bind(this));
     }
 
+    onFetchedImage(response) {
+        const url = JSON.parse(response).url;
+        this._input.value = url;
+        this.publishChangedEvent(url);
+    }
+
+    publishChangedEvent(newImageUrl) {
+        this.$emitter.publish('imageChanged', newImageUrl);
+    }
 }
