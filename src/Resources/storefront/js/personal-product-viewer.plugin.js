@@ -24,7 +24,7 @@ export default class PersonalProductViewer extends Plugin {
                 this.options.y1 - this.options.y0,
             );
 
-            this.urlInput = document.querySelector('input[name=\'personal-product-unsplash-url\']');
+            this.urlInput = document.querySelector('input[name=\'personal-product-image-url\']');
 
             this.urlInput.oninput = (ev) => {
                 const img = new Image();

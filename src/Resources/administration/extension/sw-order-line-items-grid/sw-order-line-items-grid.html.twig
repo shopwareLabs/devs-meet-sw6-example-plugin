@@ -4,14 +4,12 @@
 {% endblock %}
 
 {% block sw_order_line_items_grid_grid_columns_label_link %}
-    <router-link v-if="!isInlineEdit && item.payload.url"
+    <router-link v-else-if="!isInlineEdit && item.payload.url"
                  :title="$tc('sw-order.detailBase.contextMenuShowProduct')"
                  :to="{ name: 'sw.product.detail', params: { id: item.referencedId } }">
             {{ item.label }}
     </router-link>
-    <template v-else>
-        {% parent() %}
-    </template>
+    {% parent() %}
 {% endblock %}
 
 
