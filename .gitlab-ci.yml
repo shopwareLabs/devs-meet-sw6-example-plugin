@@ -1,0 +1,53 @@
+variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: "tcp://docker:2375"
+    MYSQL_ROOT_PASSWORD: app
+    WEB_DOCUMENT_ROOT: $CI_PROJECT_DIR/development/public
+
+stages:
+    - PHPUnit
+
+default:
+    image: shopware/development:latest
+    before_script:
+        - zip -rq plugin.zip .
+        - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/6/product/development.git
+        - git clone http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/6/product/platform.git development/platform
+        - unzip -q plugin.zip -d development/custom/plugins/SwagPersonalProduct
+        - cd development
+        - cp -v dev-ops/gitlab/.psh.yaml.override .
+        - /entrypoint supervisord > /dev/null 2>&1 &
+
+# Stage: PHPUnit
+.phpunit_base:
+    stage: PHPUnit
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+        -   name: elastic/elasticsearch:7.1.1
+            alias: elasticsearch
+            command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
+    script:
+        - ./psh.phar init
+        - php bin/console plugin:install --activate SwagPersonalProduct
+        - composer dump-autoload -d custom/plugins/SwagPersonalProduct
+        - ./psh.phar init-test-databases
+        - php -d pcov.enabled=1 -d pcov.directory=$CI_PROJECT_DIR
+            vendor/bin/phpunit
+            --configuration custom/plugins/SwagPersonalProduct/phpunit.xml.dist
+            --log-junit build/artifacts/phpunit.junit.xml
+            --colors=never
+            --coverage-clover build/artifacts/phpunit.clover.xml
+            --coverage-html build/artifacts/phpunit-coverage-html
+            --coverage-text
+
+    coverage: '/^\s*Lines:\s*(\d+(?:\.\d+)?%)/'
+    artifacts:
+        paths:
+            - development/build/artifacts/phpunit.clover.xml
+        reports:
+            junit: development/build/artifacts/phpunit.junit.xml
+
+MySQL 5.7:
+    extends: .phpunit_base
+    stage: PHPUnit

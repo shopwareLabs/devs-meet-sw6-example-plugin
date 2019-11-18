@@ -1,18 +1,23 @@
 {
-  "name": "swag/plugin-skeleton",
-  "description": "Personal product",
-  "type": "shopware-platform-plugin",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "SwagPersonalProduct\\": "src/"
+    "name": "swag/personal-product",
+    "description": "Personal product",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "SwagPersonalProduct\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SwagPersonalProduct\\Test\\": "tests/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "SwagPersonalProduct\\SwagPersonalProduct",
+        "label": {
+            "de-DE": "Personal product",
+            "en-GB": "Personal product"
+        }
     }
-  },
-  "extra": {
-    "shopware-plugin-class": "SwagPersonalProduct\\SwagPersonalProduct",
-    "label": {
-      "de-DE": "Personal product",
-      "en-GB": "Personal product"
-    }
-  }
 }

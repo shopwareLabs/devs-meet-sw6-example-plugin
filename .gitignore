@@ -1,0 +1,6 @@
+.idea/
+coverage/
+.phpunit.result.cache
+vendor/
+src/Resources/public/administration/swag-personal-product.*.hot-update.js
+phpstan.neon

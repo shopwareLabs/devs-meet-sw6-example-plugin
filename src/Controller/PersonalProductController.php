@@ -58,13 +58,12 @@ class PersonalProductController extends StorefrontController
      */
     public function addPersonalProduct(
         Cart $cart,
-        RequestDataBag $requestDataBag,
         Request $request,
         SalesChannelContext $salesChannelContext
     ): Response
     {
         /** @var string|null $imageUrl */
-        $imageUrl = $requestDataBag->get(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
+        $imageUrl = $request->request->get(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
 
         if ($imageUrl === null) {
             throw new MissingRequestParameterException(self::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER);
