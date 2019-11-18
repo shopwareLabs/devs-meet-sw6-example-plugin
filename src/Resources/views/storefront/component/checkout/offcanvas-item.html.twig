@@ -1,11 +1,11 @@
-{% sw_extends '@Storefront/component/checkout/offcanvas-item.html.twig' %}
+{% sw_extends '@Storefront/storefront/component/checkout/offcanvas-item.html.twig' %}
 
 {% block component_offcanvas_product_image_inner %}
     {{ parent() }}
     {% if lineItem.payload.url %}
         <div class="cart-item-img">
             <a class="cart-item-img-link">
-                <img class="cart-item-img-source" src="{{ lineItem.payload.url }}" alt="custom-image">
+                <img class="img-fluid cart-item-img-source" src="{{ lineItem.payload.url }}" alt="custom-image">
             </a>
         </div>
     {% endif %}

@@ -1,6 +1,3 @@
-// import styles
-import './scss/base.scss';
-
 // import js plugins
 import PersonalProductViewer from './js/personal-product-viewer.plugin';
 import ImageChanger from './js/image-changer.plugin';

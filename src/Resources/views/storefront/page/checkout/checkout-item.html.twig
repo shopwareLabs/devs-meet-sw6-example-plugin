@@ -1,9 +1,9 @@
-{% sw_extends '@Storefront/page/checkout/checkout-item.html.twig' %}
+{% sw_extends '@Storefront/storefront/page/checkout/checkout-item.html.twig' %}
 
 {% block page_checkout_item_info_image_element %}
     {{ parent() }}
     {% if lineItem.payload.url %}
-        <div class="cart-item-img">
+        <div class="cart-item-img-container">
             <a class="cart-item-img-link">
                 <img class="img-fluid cart-item-img" src="{{ lineItem.payload.url }}" alt="custom-image">
             </a>

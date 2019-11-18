@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 
 class ImageGuesser
 {
-    const SOURCE_URL = 'https://picsum.photos/';
+    const SOURCE_URL = 'https://picsum.photos';
     /**
      * @var Client
      */

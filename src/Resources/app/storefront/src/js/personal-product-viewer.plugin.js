@@ -1,5 +1,5 @@
-import Plugin from 'src/script/plugin-system/plugin.class';
-import DomAccess from 'src/script/helper/dom-access.helper';
+import Plugin from 'src/plugin-system/plugin.class';
+import DomAccess from 'src/helper/dom-access.helper';
 
 export default class PersonalProductViewer extends Plugin {
     static options = {
