@@ -1,8 +1,7 @@
 import template from './personal-product-canvas.html.twig';
 import './personal-product-canvas.scss';
-const { mapState, mapGetters } = Shopware.Component.getComponentHelper();
-const { get } = Shopware.Utils;
 
+const { mapState, mapGetters } = Shopware.Component.getComponentHelper();
 
 Shopware.Component.register('personal-product-canvas', {
     template,
@@ -33,19 +32,19 @@ Shopware.Component.register('personal-product-canvas', {
         },
 
         canvasX0: {
-            get(){ return this.get('X0') }, set(value) { this.set(value, 'X0') }
+            get() { return this.get('X0'); }, set(value) { this.set(value, 'X0'); }
         },
 
         canvasX1: {
-            get(){ return this.get('X1') }, set(value) { this.set(value, 'X1') }
+            get() { return this.get('X1'); }, set(value) { this.set(value, 'X1'); }
         },
 
         canvasY0: {
-            get(){ return this.get('Y0') }, set(value) { this.set(value, 'Y0') }
+            get() { return this.get('Y0'); }, set(value) { this.set(value, 'Y0'); }
         },
 
         canvasY1: {
-            get(){ return this.get('Y1') }, set(value) { this.set(value, 'Y1') }
+            get() { return this.get('Y1'); }, set(value) { this.set(value, 'Y1'); }
         },
 
         canvasWidth: {
@@ -102,14 +101,14 @@ Shopware.Component.register('personal-product-canvas', {
             const ratioX = this.$refs.canvas.width / width;
             const ratioY = this.$refs.canvas.height / height;
 
-            this.setPosition(x*ratioX, y*ratioY);
+            this.setPosition(x * ratioX, y * ratioY);
         },
 
         setPosition(x, y) {
             this[`canvasX${this.setPosKey}`] = Math.ceil(x);
             this[`canvasY${this.setPosKey}`] = Math.ceil(y);
 
-            this.setPosKey = + !this.setPosKey;
+            this.setPosKey = +!this.setPosKey;
         },
 
         updateCanvasRect() {
@@ -122,7 +121,7 @@ Shopware.Component.register('personal-product-canvas', {
                 context.drawImage(img, 0, 0);
 
                 // draw a rect for the selected size
-                context.fillStyle = "rgba(69,55,194,0.4)";
+                context.fillStyle = 'rgba(69,55,194,0.4)';
                 context.fillRect(
                     this.canvasX0,
                     this.canvasY0,

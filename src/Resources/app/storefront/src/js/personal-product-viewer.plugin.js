@@ -7,11 +7,11 @@ export default class PersonalProductViewer extends Plugin {
         y0: 0.0,
         x1: 10,
         y1: 10,
-        baseImage: null,
+        baseImage: null
     };
 
     init() {
-        this.PluginManager= window.PluginManager;
+        this.PluginManager = window.PluginManager;
         this._canvas = DomAccess.querySelector(this.el, '.personal-product-canvas');
         this._canvasContext = this._canvas.getContext('2d');
 
@@ -36,7 +36,6 @@ export default class PersonalProductViewer extends Plugin {
             this.drawBaseImage();
             this.drawOverlay(overlayImage);
         });
-
     }
 
     createImage(imageSrc, loadedCallbackFn) {
@@ -49,7 +48,7 @@ export default class PersonalProductViewer extends Plugin {
 
     drawBaseImage() {
         // Put the image in the canvas
-        this._canvasContext.drawImage(this._baseImage,0, 0);
+        this._canvasContext.drawImage(this._baseImage, 0, 0);
     }
 
     drawOverlay(image = null) {

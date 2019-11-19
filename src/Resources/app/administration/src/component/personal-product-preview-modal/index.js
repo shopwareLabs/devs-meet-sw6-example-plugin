@@ -22,7 +22,7 @@ Shopware.Component.register('personal-product-preview-modal', {
         }
     },
 
-    data () {
+    data() {
         return {
             product: null
         };

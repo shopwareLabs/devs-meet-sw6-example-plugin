@@ -4,7 +4,6 @@ namespace SwagPersonalProduct\Test\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Checkout\Cart\Cart;
-use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Content\Product\Aggregate\ProductVisibility\ProductVisibilityDefinition;
 use Shopware\Core\Defaults;
@@ -14,12 +13,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
 use Shopware\Core\Framework\Uuid\Uuid;
-use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
-use Swag\CustomizedProduct\Core\Checkout\CustomizedProductCartDataCollector;
-use Swag\CustomizedProduct\Storefront\Controller\CustomizedProductCartController;
-use Swag\CustomizedProduct\Template\TemplateOption\Type\Textarea;
-use Swag\CustomizedProduct\Template\TemplateOption\Type\TextField;
 use SwagPersonalProduct\Controller\PersonalProductController;
 use SwagPersonalProduct\Service\ImageGuesser;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,8 +94,8 @@ class PersonalProductControllerTest extends TestCase
     {
         $controller = $this->createController();
 
+        $productId = $this->createProduct();
         $salesChannelContext = $this->salesChannelContextFactory->create(Uuid::randomHex(), Defaults::SALES_CHANNEL);
-        $productId = $this->createProduct($salesChannelContext->getContext());
 
         $cart = $this->cartService->createNew(Uuid::randomHex());
         $request = $this->createRequest($productId, 'https://picsum.photos/id/200/300');
@@ -123,7 +117,7 @@ class PersonalProductControllerTest extends TestCase
         static::assertTrue($personalLineItem->isStackable());
     }
 
-    private function createProduct(Context $context): string
+    private function createProduct(): string
     {
         $productId = Uuid::randomHex();
 
@@ -148,10 +142,10 @@ class PersonalProductControllerTest extends TestCase
                 ],
                 'productNumber' => Uuid::randomHex(),
                 'taxId' => $this->getValidTaxId(),
-            ]
-        ], $context);
+            ],
+        ], Context::createDefaultContext());
 
-        return $this->productRepository->searchIds(new Criteria([$productId]), $context)->firstId();
+        return $productId;
     }
 
     private function getValidTaxId(): string

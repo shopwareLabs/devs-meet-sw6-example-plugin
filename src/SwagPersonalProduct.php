@@ -13,24 +13,24 @@ class SwagPersonalProduct extends Plugin
     {
         $repo = $this->container->get('custom_field.repository');
 
-        /** @var EntityRepository */
+        /* @var EntityRepository */
         $repo->create([
             [
                 'name' => 'personal_product_customizable',
-                'type' => CustomFieldTypes::BOOL
+                'type' => CustomFieldTypes::BOOL,
             ], [
                 'name' => 'personal_product_canvasX0',
-                'type' => CustomFieldTypes::INT
+                'type' => CustomFieldTypes::INT,
             ], [
                 'name' => 'personal_product_canvasY0',
-                'type' => CustomFieldTypes::INT
+                'type' => CustomFieldTypes::INT,
             ], [
                 'name' => 'personal_product_canvasX1',
-                'type' => CustomFieldTypes::INT
+                'type' => CustomFieldTypes::INT,
             ], [
                 'name' => 'personal_product_canvasY1',
-                'type' => CustomFieldTypes::INT
-            ]
+                'type' => CustomFieldTypes::INT,
+            ],
         ], $activateContext->getContext());
     }
 }
