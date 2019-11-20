@@ -9,6 +9,15 @@
             <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
             <argument type="service" id="product.repository"/>
             <argument type="service" id="SwagPersonalProduct\Service\ImageGuesser"/>
+            <argument type="service" id="swag_personal_product_image.repository"/>
+        </service>
+
+        <service id="SwagPersonalProduct\PersonalImage\PersonalImageDefinition">
+            <tag name="shopware.entity.definition" entity="swag_personal_product_image"/>
+        </service>
+
+        <service id="SwagPersonalProduct\Extension\ProductExtension">
+            <tag name="shopware.entity.extension"/>
         </service>
 
         <service id="SwagPersonalProduct\Core\ProductFilterSubscriber">

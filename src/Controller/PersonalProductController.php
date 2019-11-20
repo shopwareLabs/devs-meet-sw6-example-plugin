@@ -9,6 +9,7 @@ use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Api\Response\JsonApiResponse;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\Routing\Annotation\RouteScope;
 use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Uuid\Uuid;
@@ -42,11 +43,21 @@ class PersonalProductController extends StorefrontController
      */
     private $imageGuesser;
 
-    public function __construct(CartService $cartService, EntityRepositoryInterface $productRepo, ImageGuesser $imageGuesser)
-    {
+    /**
+     * @var EntityRepositoryInterface
+     */
+    private $imageRepository;
+
+    public function __construct(
+        CartService $cartService,
+        EntityRepositoryInterface $productRepo,
+        ImageGuesser $imageGuesser,
+        EntityRepositoryInterface $imageRepository
+    ) {
         $this->cartService = $cartService;
         $this->productRepo = $productRepo;
         $this->imageGuesser = $imageGuesser;
+        $this->imageRepository = $imageRepository;
     }
 
     /**
@@ -78,7 +89,8 @@ class PersonalProductController extends StorefrontController
         $personalProductLineItem = $this->createPersonalProductLineItem(
             $imageUrl,
             $product['id'],
-            $productQuantity
+            $productQuantity,
+            $salesChannelContext
         );
 
         $this->cartService->add($cart, $personalProductLineItem, $salesChannelContext);
@@ -114,10 +126,13 @@ class PersonalProductController extends StorefrontController
     private function createPersonalProductLineItem(
         string $imageUrl,
         string $productId,
-        int $productQuantity
+        int $productQuantity,
+        SalesChannelContext $context
     ): LineItem {
+        $lineItemId = $this->getLineItemId($productId, $imageUrl, $context);
+
         $productLineItem = new LineItem(
-            Uuid::randomHex(),
+            $lineItemId,
             LineItem::PRODUCT_LINE_ITEM_TYPE,
             $productId,
             $productQuantity
@@ -157,5 +172,28 @@ class PersonalProductController extends StorefrontController
         $n = $n / 10;
 
         return (int) (round($n) * 10);
+    }
+
+    private function getLineItemId(string $productId, string $imageUrl, SalesChannelContext $context): string
+    {
+        $criteria = new Criteria();
+        $criteria->setLimit(1)->addFilter(new EqualsFilter('productId', $productId), new EqualsFilter('url', $imageUrl));
+        $id = $this->imageRepository->searchIds($criteria, $context->getContext())->firstId();
+
+        if ($id !== null) {
+            return $id;
+        }
+
+        $id = Uuid::randomHex();
+
+        $this->imageRepository->create([
+            [
+                'id' => $id,
+                'productId' => $productId,
+                'url' => $imageUrl,
+            ],
+        ], $context->getContext());
+
+        return $id;
     }
 }
