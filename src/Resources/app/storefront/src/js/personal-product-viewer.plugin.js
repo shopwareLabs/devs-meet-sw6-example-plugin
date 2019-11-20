@@ -7,7 +7,7 @@ export default class PersonalProductViewer extends Plugin {
         y0: 0.0,
         x1: 10,
         y1: 10,
-        baseImage: null
+        baseImage: null,
     };
 
     init() {

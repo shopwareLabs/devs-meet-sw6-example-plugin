@@ -4,7 +4,7 @@ import HttpClient from 'src/service/http-client.service';
 
 export default class ImageChanger extends Plugin {
     static options = {
-        fetchRoute: ''
+        fetchRoute: '',
     };
 
     init() {
