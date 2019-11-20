@@ -6,14 +6,22 @@
 
     <services>
         <service id="SwagPersonalProduct\Controller\PersonalProductController" public="true">
-            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
-            <argument type="service" id="product.repository"/>
-            <argument type="service" id="SwagPersonalProduct\Service\ImageGuesser"/>
-            <argument type="service" id="swag_personal_product_image.repository"/>
+            <argument id="SwagPersonalProduct\Service\PersonalProductLineItemService" type="service"/>
+            <argument id="SwagPersonalProduct\Service\ImageService" type="service"/>
         </service>
 
         <service id="SwagPersonalProduct\PersonalImage\PersonalImageDefinition">
             <tag name="shopware.entity.definition" entity="swag_personal_product_image"/>
+        </service>
+
+        <service id="SwagPersonalProduct\Service\PersonalProductLineItemService">
+            <argument id="Shopware\Core\Checkout\Cart\SalesChannel\CartService" type="service"/>
+            <argument id="swag_personal_product_image.repository" type="service"/>
+        </service>
+
+        <service id="SwagPersonalProduct\Service\ImageService">
+            <argument id="product.repository" type="service"/>
+            <argument id="SwagPersonalProduct\Service\ImageGuesser" type="service"/>
         </service>
 
         <service id="SwagPersonalProduct\Extension\ProductExtension">
