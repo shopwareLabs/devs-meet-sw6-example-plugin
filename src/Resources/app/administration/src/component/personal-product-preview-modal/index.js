@@ -1,14 +1,14 @@
 import template from './personal-product-preview-modal.html.twig';
 import './personal-product-preview-modal.scss';
 
+const { Component, Context } = Shopware;
 const { Criteria } = Shopware.Data;
 
-Shopware.Component.register('personal-product-preview-modal', {
+Component.register('personal-product-preview-modal', {
     template,
 
     inject: [
         'repositoryFactory',
-        'apiContext'
     ],
 
     props: {
@@ -44,7 +44,7 @@ Shopware.Component.register('personal-product-preview-modal', {
             criteria.setIds([this.productId]);
             criteria.addAssociation('media');
 
-            this.productRepository.search(criteria, this.apiContext).then(products => {
+            this.productRepository.search(criteria, Context.api).then(products => {
                 this.product = products.first();
                 this.$nextTick(() => this.drawCanvas());
             });
