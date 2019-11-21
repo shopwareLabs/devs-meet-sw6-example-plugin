@@ -8,7 +8,7 @@ Component.register('personal-product-preview-modal', {
     template,
 
     inject: [
-        'repositoryFactory',
+        'repositoryFactory'
     ],
 
     props: {

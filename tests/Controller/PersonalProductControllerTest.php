@@ -14,8 +14,12 @@ use Shopware\Core\Framework\Routing\Exception\MissingRequestParameterException;
 use Shopware\Core\Framework\Test\TestCaseBase\IntegrationTestBehaviour;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
+use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use SwagPersonalProduct\Controller\PersonalProductController;
 use SwagPersonalProduct\Service\ImageGuesser;
+use SwagPersonalProduct\Service\ImageService;
+use SwagPersonalProduct\Service\PersonalProductLineItemService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class PersonalProductControllerTest extends TestCase
@@ -42,12 +46,24 @@ class PersonalProductControllerTest extends TestCase
      */
     private $imageGuesser;
 
+    /**
+     * @var ImageService
+     */
+    private $imageService;
+
+    /**
+     * @var PersonalProductLineItemService
+     */
+    private $personalProductLineItemService;
+
     protected function setUp(): void
     {
         $this->salesChannelContextFactory = $this->getContainer()->get(SalesChannelContextFactory::class);
         $this->cartService = $this->getContainer()->get(CartService::class);
         $this->productRepository = $this->getContainer()->get('product.repository');
         $this->imageGuesser = $this->getContainer()->get(ImageGuesser::class);
+        $this->imageService = $this->getContainer()->get(ImageService::class);
+        $this->personalProductLineItemService = $this->getContainer()->get(PersonalProductLineItemService::class);
     }
 
     public function testAddPersonalProductMissingParameter(): void
@@ -117,6 +133,25 @@ class PersonalProductControllerTest extends TestCase
         static::assertTrue($personalLineItem->isStackable());
     }
 
+    public function testGetRandomUrl(): void
+    {
+        $salesChannelContext = $this->createMock(SalesChannelContext::class);
+        $id = Uuid::randomHex();
+        $imageService = $this->createMock(ImageService::class);
+        $imageService->expects(static::once())->method('getRandomUrlByProductId')->with($id, $salesChannelContext)->willReturn('http://image.url');
+
+        $controller = new PersonalProductController($this->createMock(PersonalProductLineItemService::class), $imageService);
+
+        $urlResponse = $controller->getPersonalImage($id, $salesChannelContext);
+
+        static::assertInstanceOf(JsonResponse::class, $urlResponse);
+        $json = json_decode($urlResponse->getContent(), true);
+
+        static::assertCount(1, $json);
+        static::assertArrayHasKey('url', $json);
+        static::assertSame('http://image.url', $json['url']);
+    }
+
     private function createProduct(): string
     {
         $productId = Uuid::randomHex();
@@ -161,7 +196,7 @@ class PersonalProductControllerTest extends TestCase
 
     private function createController(): PersonalProductController
     {
-        $controller = new PersonalProductController($this->cartService, $this->productRepository, $this->imageGuesser);
+        $controller = new PersonalProductController($this->personalProductLineItemService, $this->imageService);
         $controller->setContainer($this->getContainer());
 
         return $controller;

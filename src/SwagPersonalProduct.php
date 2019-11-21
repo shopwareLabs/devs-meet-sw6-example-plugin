@@ -9,6 +9,12 @@ use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 
 class SwagPersonalProduct extends Plugin
 {
+    public const PRODUCT_CUSTOMIZABLE = 'personal_product_customizable';
+    public const PRODUCT_CANVAS_X0 = 'personal_product_canvasX0';
+    public const PRODUCT_CANVAS_Y0 = 'personal_product_canvasY0';
+    public const PRODUCT_CANVAS_X1 = 'personal_product_canvasX1';
+    public const PRODUCT_CANVAS_Y1 = 'personal_product_canvasY1';
+
     public function activate(ActivateContext $activateContext): void
     {
         $repo = $this->container->get('custom_field.repository');
@@ -16,19 +22,19 @@ class SwagPersonalProduct extends Plugin
         /* @var EntityRepository */
         $repo->create([
             [
-                'name' => 'personal_product_customizable',
+                'name' => self::PRODUCT_CUSTOMIZABLE,
                 'type' => CustomFieldTypes::BOOL,
             ], [
-                'name' => 'personal_product_canvasX0',
+                'name' => self::PRODUCT_CANVAS_X0,
                 'type' => CustomFieldTypes::INT,
             ], [
-                'name' => 'personal_product_canvasY0',
+                'name' => self::PRODUCT_CANVAS_Y0,
                 'type' => CustomFieldTypes::INT,
             ], [
-                'name' => 'personal_product_canvasX1',
+                'name' => self::PRODUCT_CANVAS_X1,
                 'type' => CustomFieldTypes::INT,
             ], [
-                'name' => 'personal_product_canvasY1',
+                'name' => self::PRODUCT_CANVAS_Y1,
                 'type' => CustomFieldTypes::INT,
             ],
         ], $activateContext->getContext());

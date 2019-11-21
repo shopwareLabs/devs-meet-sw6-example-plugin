@@ -74,8 +74,8 @@ class PersonalProductController extends StorefrontController
      * @Route("/personal-product/{id}/personal-image", name="frontend.personal-product.get-image", methods={"GET"}, defaults={"XmlHttpRequest"=true})
      */
     public function getPersonalImage(
-        SalesChannelContext $salesChannelContext,
-        string $id
+        string $id,
+        SalesChannelContext $salesChannelContext
     ): Response {
         $url = $this->imageService->getRandomUrlByProductId($id, $salesChannelContext);
 

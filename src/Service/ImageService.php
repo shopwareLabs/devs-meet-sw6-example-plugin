@@ -6,6 +6,8 @@ use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
+use SwagPersonalProduct\Exception\ProductNotCustomizable;
+use SwagPersonalProduct\SwagPersonalProduct;
 
 class ImageService
 {
@@ -43,8 +45,14 @@ class ImageService
     {
         $customFields = $product->getCustomFields();
 
-        $x0 = $customFields['personal_product_canvasX0'];
-        $x1 = $customFields['personal_product_canvasX1'];
+        $customizable = $customFields[SwagPersonalProduct::PRODUCT_CUSTOMIZABLE] ?? null;
+        $x0 = $customFields[SwagPersonalProduct::PRODUCT_CANVAS_X0] ?? null;
+        $x1 = $customFields[SwagPersonalProduct::PRODUCT_CANVAS_X1] ?? null;
+
+        if ($customizable !== true || $x0 === null || $x1 === null) {
+            throw new ProductNotCustomizable($product->getId());
+        }
+
         $width = abs($x1 - $x0);
 
         return $this->roundToTens($width);
@@ -54,8 +62,14 @@ class ImageService
     {
         $customFields = $product->getCustomFields();
 
-        $y0 = $customFields['personal_product_canvasY0'];
-        $y1 = $customFields['personal_product_canvasY1'];
+        $customizable = $customFields[SwagPersonalProduct::PRODUCT_CUSTOMIZABLE] ?? null;
+        $y0 = $customFields[SwagPersonalProduct::PRODUCT_CANVAS_Y0] ?? null;
+        $y1 = $customFields[SwagPersonalProduct::PRODUCT_CANVAS_Y1] ?? null;
+
+        if ($customizable !== true || $y0 === null || $y1 === null) {
+            throw new ProductNotCustomizable($product->getId());
+        }
+
         $height = abs($y1 - $y0);
 
         return $this->roundToTens($height);
@@ -63,8 +77,6 @@ class ImageService
 
     private function roundToTens($n): int
     {
-        $n = $n / 10;
-
-        return (int) (round($n) * 10);
+        return (int) round($n, -1);
     }
 }
