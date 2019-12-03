@@ -30,6 +30,10 @@ export default class PersonalProductViewer extends Plugin {
         imageChangerInstance.$emitter.subscribe('imageChanged', this.onChangeImage.bind(this));
     }
 
+    /**
+     * @param {object} event
+     * @param {string} event.detail Contains the url of the overlay image
+     */
     onChangeImage({ detail }) {
         this.resetCanvas();
         const overlayImage = this.createImage(detail, () => {
@@ -38,6 +42,11 @@ export default class PersonalProductViewer extends Plugin {
         });
     }
 
+    /**
+     * @param {string} imageSrc
+     * @param {function} loadedCallbackFn
+     * @returns {HTMLImageElement}
+     */
     createImage(imageSrc, loadedCallbackFn) {
         const image = new Image();
         image.addEventListener('load', loadedCallbackFn);
@@ -51,6 +60,11 @@ export default class PersonalProductViewer extends Plugin {
         this._canvasContext.drawImage(this._baseImage, 0, 0);
     }
 
+    /**
+     * Draws the overlay image. Uses a placeholder if no image is provided.
+     *
+     * @param {string} [image=null]
+     */
     drawOverlay(image = null) {
         if (image) {
             // Draw the overlay image to the canvas
