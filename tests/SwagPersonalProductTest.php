@@ -3,12 +3,12 @@
 namespace SwagPersonalProduct\Test;
 
 use PHPUnit\Framework\TestCase;
-use Shopware\Core\Framework\CustomField\CustomFieldTypes;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenContainerEvent;
 use Shopware\Core\Framework\Event\NestedEventCollection;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
+use Shopware\Core\System\CustomField\CustomFieldTypes;
 use SwagPersonalProduct\SwagPersonalProduct;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
