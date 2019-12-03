@@ -17,6 +17,7 @@ class SwagPersonalProduct extends Plugin
 
     public function activate(ActivateContext $activateContext): void
     {
+        /** @var EntityRepository $repo */
         $repo = $this->container->get('custom_field.repository');
 
         /* @var EntityRepository */

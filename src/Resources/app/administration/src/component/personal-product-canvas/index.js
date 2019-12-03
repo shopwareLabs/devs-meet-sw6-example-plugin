@@ -71,10 +71,18 @@ Shopware.Component.register('personal-product-canvas', {
     },
 
     methods: {
+        /**
+         * @param {string} param Coordinate(for example: X1 or Y0)
+         * @returns {*|number}
+         */
         get(param) {
             return this.product.customFields[`personal_product_canvas${param}`] || 0;
         },
 
+        /**
+         * @param value
+         * @param {string} param Coordinate(for example: X1 or Y0)
+         */
         set(value, param) {
             this.$set(this.product.customFields, `personal_product_canvas${param}`, value);
             this.updateCanvasRect();
@@ -90,12 +98,22 @@ Shopware.Component.register('personal-product-canvas', {
             });
         },
 
-        onClickCanvas(e) {
+        /**
+         * Handles a click on the image
+         * @param {mouseEvent} mouseEvent
+         */
+        onClickCanvas(mouseEvent) {
+            // get actual rect values for the viewport
             const rect = this.$refs.canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            // calculate the clicked position on the picture
+            // mouseEvent.clientX:  distance of clicked position to the edge
+            // rect.left:           distance of rect to the edge
+            const x = mouseEvent.clientX - rect.left;
+            const y = mouseEvent.clientY - rect.top;
 
             // calculate the ratio, because the image could be scaled in this viewport
+            // this.$refs.canvas.offsetWidth:   actual width of the picture(probably scaled)
+            // this.$refs.canvas.width:         real picture with
             const width = this.$refs.canvas.offsetWidth;
             const height = this.$refs.canvas.offsetHeight;
             const ratioX = this.$refs.canvas.width / width;
@@ -104,6 +122,12 @@ Shopware.Component.register('personal-product-canvas', {
             this.setPosition(x * ratioX, y * ratioY);
         },
 
+        /**
+         * Sets the xy position for a coordinate(X0/Y0 or X1/Y1)
+         * The coordinates will toggle after each setting
+         * @param x
+         * @param y
+         */
         setPosition(x, y) {
             this[`canvasX${this.setPosKey}`] = Math.ceil(x);
             this[`canvasY${this.setPosKey}`] = Math.ceil(y);
@@ -111,6 +135,9 @@ Shopware.Component.register('personal-product-canvas', {
             this.setPosKey = +!this.setPosKey;
         },
 
+        /**
+         *  Clear and redraw the canvas
+         */
         updateCanvasRect() {
             const context = this.$refs.canvas.getContext('2d');
             // clear canvas
@@ -132,6 +159,9 @@ Shopware.Component.register('personal-product-canvas', {
             img.src = this.product.media.first().media.url;
         },
 
+        /**
+         * Reset all coordinates
+         */
         onClickReset() {
             this.canvasX0 = 0;
             this.canvasX1 = 0;
