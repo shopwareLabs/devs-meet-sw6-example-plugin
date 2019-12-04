@@ -2,10 +2,10 @@
 
 namespace SwagPersonalProduct;
 
+use Shopware\Core\Framework\CustomField\CustomFieldTypes;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
-use Shopware\Core\System\CustomField\CustomFieldTypes;
 
 class SwagPersonalProduct extends Plugin
 {
