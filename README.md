@@ -251,7 +251,7 @@ onFetchedImage(response) {
       
 ## Reading custom fields
 `src/Service/ImageService.php`
-```
+```php
    public function getRandomUrlByProductId(string $productId, SalesChannelContext $salesChannelContext): string
    {
        $criteria = new Criteria([$productId]);
