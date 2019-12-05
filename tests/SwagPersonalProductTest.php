@@ -5,6 +5,9 @@ namespace SwagPersonalProduct\Test;
 use PHPUnit\Framework\TestCase;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityWrittenContainerEvent;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsAnyFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\IdSearchResult;
 use Shopware\Core\Framework\Event\NestedEventCollection;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\ActivateContext;
@@ -57,5 +60,28 @@ class SwagPersonalProductTest extends TestCase
 
         static::assertCount(1, $booleanTypes);
         static::assertCount(4, $intTypes);
+    }
+
+    public function testCustomFieldsAlreadyExists(): void
+    {
+        $idResult = $this->createMock(IdSearchResult::class);
+        $idResult->expects(static::once())->method('getTotal')->willReturn(4);
+        /** @var Criteria $criteria */
+        $criteria = null;
+        $repo = $this->createMock(EntityRepositoryInterface::class);
+        $repo->expects(static::once())->method('searchIds')->willReturnCallback(function (Criteria $data, $context) use (&$idResult, &$criteria) {
+            $criteria = $data;
+
+            return $idResult;
+        });
+
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(static::once())->method('get')->with('custom_field.repository')->willReturn($repo);
+        $plugin = new SwagPersonalProduct(true, '');
+        $plugin->setContainer($container);
+
+        $plugin->activate($this->createMock(ActivateContext::class));
+
+        static::assertInstanceOf(EqualsAnyFilter::class, $criteria->getFilters()[0]);
     }
 }
