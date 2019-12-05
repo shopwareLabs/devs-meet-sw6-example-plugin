@@ -6,7 +6,6 @@
 
     <services>
         <service id="SwagPersonalProduct\Controller\PersonalProductController" public="true">
-            <argument id="SwagPersonalProduct\Service\PersonalProductLineItemService" type="service"/>
             <argument id="SwagPersonalProduct\Service\ImageService" type="service"/>
         </service>
 
@@ -14,14 +13,10 @@
             <tag name="shopware.entity.definition" entity="swag_personal_product_image"/>
         </service>
 
-        <service id="SwagPersonalProduct\Service\PersonalProductLineItemService">
-            <argument id="Shopware\Core\Checkout\Cart\SalesChannel\CartService" type="service"/>
-            <argument id="swag_personal_product_image.repository" type="service"/>
-        </service>
-
         <service id="SwagPersonalProduct\Service\ImageService">
             <argument id="product.repository" type="service"/>
             <argument id="SwagPersonalProduct\Service\ImageGuesser" type="service"/>
+            <argument id="swag_personal_product_image.repository" type="service"/>
         </service>
 
         <service id="SwagPersonalProduct\Extension\ProductExtension">
@@ -33,6 +28,13 @@
         </service>
 
         <service id="SwagPersonalProduct\Service\ImageGuesser">
+        </service>
+
+        <service id="SwagPersonalProduct\Service\PersonalProductCartProcessor">
+            <argument id="swag_personal_product_image.repository" type="service"/>
+
+            <tag name="shopware.cart.processor"/>
+            <tag name="shopware.cart.collector"/>
         </service>
     </services>
 </container>

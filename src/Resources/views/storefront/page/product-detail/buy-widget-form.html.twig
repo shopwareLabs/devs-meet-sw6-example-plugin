@@ -5,7 +5,11 @@
 {% block page_product_detail_buy_form_inner_csrf %}
     {% if customFields.personal_product_customizable %}
         <div data-image-changer="true"
-             data-image-changer-options='{"fetchRoute": "{{ path('frontend.personal-product.get-image', {id: page.product.id}) }}"}'>
+             data-image-changer-options='{
+             "fetchRoute": "{{ path('frontend.personal-product.get-image', {id: page.product.id}) }}",
+             "idFieldName": "lineItems[{{ page.product.id }}][id]",
+             "csrfToken": "{{ csrf_token("frontend.personal-product.get-image", {"mode": "token" }) }}"
+             }'>
             <input type="text"
                    name="{{ constant('SwagPersonalProduct\\Controller\\PersonalProductController::PERSONAL_PRODUCT_REQUEST_IMAGE_URL_PARAMETER') }}"
                    value=""
@@ -18,17 +22,7 @@
                    class="personal-product-button-fetch btn btn-secondary btn-block"
                    value="Fetch new picture">
         </div>
-
-        {{ sw_csrf('frontend.checkout.personal-product.add') }}
-    {% else %}
-        {{ parent() }}
     {% endif %}
-{% endblock %}
 
-{% block page_product_detail_buy_form_action %}
-    {% if customFields.personal_product_customizable %}
-        {{ path('frontend.checkout.personal-product.add') }}
-    {% else %}
-        {{ parent() }}
-    {% endif %}
+    {{ parent() }}
 {% endblock %}
