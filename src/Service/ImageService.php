@@ -41,18 +41,7 @@ class ImageService
 
     public function getRandomPersonalImageByProductId(string $productId, SalesChannelContext $salesChannelContext): PersonalImageEntity
     {
-        $criteria = new Criteria([$productId]);
-
-        /** @var ProductEntity $product */
-        $product = $this->productRepository->search($criteria, $salesChannelContext->getContext())->first();
-
-        $width = $this->getPersonalImageWidth($product);
-
-        $height = $this->getPersonalImageHeight($product);
-
-        $url = $this->imageGuesser->fetchRandomImageUrl($width, $height);
-
-        return $this->getImageUrl($productId, $url, $salesChannelContext);
+        return new PersonalImageEntity();
     }
 
     public function getImageUrl(string $productId, string $imageUrl, SalesChannelContext $context): PersonalImageEntity
