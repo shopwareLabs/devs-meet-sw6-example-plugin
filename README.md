@@ -2,72 +2,22 @@
 ## Setup - getting base plugin
 - download plugin zip from link
 - unpack plugin to custom/plugins folder
+- show plugin skeleton
+    - show composer json
+    - possibility to add dependencies
 - go through plugin files and explain folders/files
 
 ## Adding custom fields
-- open `src/SwagPersonalProduct.php` and add custom fields during setup
-`src/SwagPersonalProduct.php`:
-```php
-<?php declare(strict_types=1);
-
-namespace SwagPersonalProduct;
-
-use Shopware\Core\Framework\CustomField\CustomFieldTypes;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\Plugin;
-use Shopware\Core\Framework\Plugin\Context\ActivateContext;
-
-class SwagPersonalProduct extends Plugin
-{
-    public const PRODUCT_CUSTOMIZABLE = 'personal_product_customizable';
-    public const PRODUCT_CANVAS_X0 = 'personal_product_canvasX0';
-    public const PRODUCT_CANVAS_Y0 = 'personal_product_canvasY0';
-    public const PRODUCT_CANVAS_X1 = 'personal_product_canvasX1';
-    public const PRODUCT_CANVAS_Y1 = 'personal_product_canvasY1';
-
-    public function activate(ActivateContext $activateContext): void
-    {
-        $repo = $this->container->get('custom_field.repository');
-
-        /* @var EntityRepository */
-        $repo->create([
-            [
-                'name' => self::PRODUCT_CUSTOMIZABLE,
-                'type' => CustomFieldTypes::BOOL,
-            ], [
-                'name' => self::PRODUCT_CANVAS_X0,
-                'type' => CustomFieldTypes::INT,
-            ], [
-                'name' => self::PRODUCT_CANVAS_Y0,
-                'type' => CustomFieldTypes::INT,
-            ], [
-                'name' => self::PRODUCT_CANVAS_X1,
-                'type' => CustomFieldTypes::INT,
-            ], [
-                'name' => self::PRODUCT_CANVAS_Y1,
-                'type' => CustomFieldTypes::INT,
-            ],
-        ], $activateContext->getContext());
-    }
-}
-```
-- Tests for step 1 should not fail anymore
+- open `src/SwagPersonalProduct.php` and add explain custom fields
 - use `bin/console plugin:install --activate SwagPersonalProduct` to install and activate plugin
 
-## Product detail page extension
+## Example 01 - Product detail page extension
+- ask about Vue.js 
+- how can we find components
+- ask about developer console
 - search the component in the administration with Vue console `sw-product-detail-base`
 - show global shopware object
 - create extension
-`src/Resources/app/administration/src/extension/sw-product-detail-base/index.js`:
-```javascript
-import template from './sw-product-detail-base.html.twig';
-
-const { Component } = Shopware;
-
-Component.override('sw-product-detail-base', {
-    template
-});
-```
 `src/Resources/app/administration/src/extension/sw-product-detail-base/sw-product-detail-base.html.twig`:
 ```html
 {% block sw_product_detail_base_basic_info_card %}
@@ -84,139 +34,16 @@ Component.override('sw-product-detail-base', {
 import './extension/sw-product-detail-base';
 ```
 
-## New admin component for canvas rendering
+### New admin component for canvas rendering
 - open and explain product canvas component
 `src/Resources/app/administration/src/component/personal-product-canvas/index.js`
 - explain vuex store and add computed state and getter (explain and show shopware object)
-```javascript
-    const { mapState, mapGetters } = Shopware.Component.getComponentHelper();
-    Shopware.Component.register('personal-product-canvas', {
-        computed: {
-            ...
-    
-            ...mapState('swProductDetail', [
-                'product'
-            ]),
-    
-            ...mapGetters('swProductDetail', [
-                'isLoading'
-            ]),
-        }
-    }
-```
 - take a look in the vue developer console to show product entity
 - explain und build computed setter/getter
-`src/Resources/app/administration/src/component/personal-product-canvas/index.js`
-```javascript
-    computed: {
-        ...
-    
-        isCustomizable: {
-            get() {
-                return this.product.customFields.personal_product_customizable || false;
-            },
-            set(value) {
-                this.$set(this.product.customFields, 'personal_product_customizable', value);
-                if (value) this.initializeCanvas();
-            }
-        }
-    }
-```
-- write template
-`src/Resources/app/administration/src/component/personal-product-canvas/personal-product-canvas.html.twig`
-```html
-{% block personal_product_attributes %}
-    <div v-if="!isLoading" class="personal-product-canvas">
-        <sw-switch-field
-            label="Customizable product"
-            v-model="isCustomizable">
-        </sw-switch-field>
 
-        <sw-container columns="2fr 1fr" v-if="isCustomizable">
-            <div class="media-canvas-outer">
-                <div class="media-canvas-inner">
-                    <canvas ref="canvas" class="canvas" @click="onClickCanvas">
-                    </canvas>
-                </div>
-            </div>
-
-            <div>
-                <sw-number-field
-                    label="Canvas X0"
-                    v-model="canvasX0">
-                </sw-number-field>
-
-                <sw-number-field
-                    label="Canvas Y0"
-                    v-model="canvasY0">
-                </sw-number-field>
-
-                <sw-number-field
-                    label="Canva X1"
-                    v-model="canvasX1">
-                </sw-number-field>
-    
-                <sw-number-field
-                    label="Canvas Y1"
-                    v-model="canvasY1">
-                </sw-number-field>
-
-                <sw-button @click="onClickReset" variant="primary">
-                    Reset
-                </sw-button>
-            </div>
-        </sw-container>
-    </div>
-{% endblock %}
-```
-- change X1 and Y1 to height and width computed
-`src/Resources/app/administration/src/component/personal-product-canvas/index.js`
-```javascript
-    canvasWidth: {
-        get() { return this.canvasX1 - this.canvasX0 || 0; },
-        set(value) {
-            this.canvasX1 = this.canvasX0 + value;
-        }
-    },
-    
-    canvasHeight: {
-        get() { return this.canvasY1 - this.canvasY0 || 0; },
-        set(value) {
-            this.canvasY1 = this.canvasY0 + value;
-        }
-    }
-```
-`src/Resources/app/administration/src/component/personal-product-canvas/personal-product-canvas.html.twig`
-```html
-    <sw-number-field
-        label="Canva Width"
-        v-model="canvasWidth">
-    </sw-number-field>
-    
-    <sw-number-field
-        label="Canvas Height"
-        v-model="canvasHeight">
-    </sw-number-field>
-```
-- optional: add watcher for redraw after loading
-`src/Resources/app/administration/src/component/personal-product-canvas/index.js`
-```javascript
-    watch: {
-        isLoading(newValue) {
-            if (!newValue && this.isCustomizable) {
-                this.initializeCanvas();
-            }
-        }
-    }
-```
-
-## Storefront product viewer
+## Example 02 - Storefront product viewer
 - Show JS base plugin and the corresponding template
-- Register plugin in the plugin manager
-`src/Resources/app/storefront/src/main.js`
-```javascript
-    PluginManager.register('PersonalProductViewer', PersonalProductViewer, '[data-personal-product-viewer]');
-```
+- dump `page.product`
 - use the template to initialize plugin and handle over the coordinates
 `src/Resources/views/storefront/page/product-detail/index.html.twig`
 ```html
@@ -239,7 +66,14 @@ import './extension/sw-product-detail-base';
         </canvas>
     </div>
 ```
+- Register plugin in the plugin manager
+`src/Resources/app/storefront/src/main.js`
+```javascript
+    PluginManager.register('PersonalProductViewer', PersonalProductViewer, '[data-personal-product-viewer]');
+```
 - test plugin with a image url from google
+
+# Rades part
 
 ## Image change component, enabling Fetch button 
 `src/Resources/app/storefront/src/js/image-changer.plugin.js`  
