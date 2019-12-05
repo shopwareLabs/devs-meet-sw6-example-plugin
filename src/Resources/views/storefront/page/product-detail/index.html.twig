@@ -3,16 +3,7 @@
 {% block page_product_detail_media %}
     {% set customFields = page.product.customFields %}
     {% if customFields.personal_product_customizable %}
-        <div class="personal-product"
-             data-personal-product-viewer="true"
-             data-personal-product-viewer-options='
-             {
-                "x0":{{ customFields.personal_product_canvasX0 }},
-                "y0":{{ customFields.personal_product_canvasY0 }},
-                "x1":{{ customFields.personal_product_canvasX1 }},
-                "y1":{{ customFields.personal_product_canvasY1 }},
-                "baseImage":"{{page.product.media.first().media.url}}"
-             }'>
+        <div class="personal-product">
             <canvas
                 class="personal-product-canvas"
                 width="{{ page.product.media.first().media.metaData.width }}"
