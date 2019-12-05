@@ -40,8 +40,7 @@ export default class ImageChanger extends Plugin {
         this.publishChangedEvent(parsed.url);
     }
 
-    publishChangedEvent() {
-        const url = this._input.value;
+    publishChangedEvent(url) {
         this.$emitter.publish('imageChanged', url);
     }
 }
