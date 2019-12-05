@@ -24,10 +24,7 @@ export default class PersonalProductViewer extends Plugin {
     }
 
     subscribeImageChangedEvent() {
-        // Subscribe to image changer plugin event
-        const imageChangerEl = DomAccess.querySelector(document, '[data-image-changer]');
-        const imageChangerInstance = this.PluginManager.getPluginInstanceFromElement(imageChangerEl, 'ImageChanger');
-        imageChangerInstance.$emitter.subscribe('imageChanged', this.onChangeImage.bind(this));
+
     }
 
     /**
