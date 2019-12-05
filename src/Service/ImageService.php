@@ -82,7 +82,7 @@ class ImageService
         return $image;
     }
 
-    private function getPersonalImageWidth(ProductEntity $product): int
+    public function getPersonalImageWidth(ProductEntity $product): int
     {
         $customFields = $product->getCustomFields();
 
@@ -99,7 +99,7 @@ class ImageService
         return $this->roundToTens($width);
     }
 
-    private function getPersonalImageHeight(ProductEntity $product): int
+    public function getPersonalImageHeight(ProductEntity $product): int
     {
         $customFields = $product->getCustomFields();
 

@@ -32,9 +32,11 @@
 
         <service id="SwagPersonalProduct\Service\PersonalProductCartProcessor">
             <argument id="swag_personal_product_image.repository" type="service"/>
+            <argument id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator" type="service"/>
+            <argument id="SwagPersonalProduct\Service\ImageService" type="service"/>
 
-            <tag name="shopware.cart.processor"/>
             <tag name="shopware.cart.collector"/>
+            <tag name="shopware.cart.processor"/>
         </service>
     </services>
 </container>
