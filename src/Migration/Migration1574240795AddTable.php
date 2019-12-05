@@ -15,7 +15,7 @@ class Migration1574240795AddTable extends MigrationStep
     public function update(Connection $connection): void
     {
         $connection->executeQuery('
-        CREATE TABLE swag_personal_product_image
+        CREATE TABLE IF NOT EXISTS swag_personal_product_image
         (
             id BINARY(16) NOT NULL,
             url VARCHAR(255) NOT NULL,
