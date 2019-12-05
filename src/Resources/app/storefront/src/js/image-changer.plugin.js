@@ -10,15 +10,14 @@ export default class ImageChanger extends Plugin {
     init() {
         this._client = new HttpClient(window.accessKey, window.contextToken);
         this._input = DomAccess.querySelector(this.el, '.personal-product-input');
-        this._button = DomAccess.querySelector(this.el, '.personal-product-button');
+        this._fetchButton = DomAccess.querySelector(this.el, '.personal-product-button-fetch');
+        this._renderButton = DomAccess.querySelector(this.el, '.personal-product-button-render');
         this.addEventListener();
     }
 
     addEventListener() {
-        this._button.addEventListener('click', this.onClickFetch.bind(this));
-        this._input.addEventListener('input', (event) => {
-            this.publishChangedEvent(event.target.value);
-        });
+        this._fetchButton.addEventListener('click', this.onClickFetch.bind(this));
+        this._renderButton.addEventListener('click', this.publishChangedEvent.bind(this));
     }
 
     onClickFetch() {
@@ -31,7 +30,8 @@ export default class ImageChanger extends Plugin {
         this.publishChangedEvent(url);
     }
 
-    publishChangedEvent(newImageUrl) {
-        this.$emitter.publish('imageChanged', newImageUrl);
+    publishChangedEvent() {
+        const url = this._input.value;
+        this.$emitter.publish('imageChanged', url);
     }
 }
