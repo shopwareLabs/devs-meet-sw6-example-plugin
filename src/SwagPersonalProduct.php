@@ -28,10 +28,10 @@ class SwagPersonalProduct extends Plugin
             self::PRODUCT_CANVAS_X0,
             self::PRODUCT_CANVAS_Y0,
             self::PRODUCT_CANVAS_X1,
-            self::PRODUCT_CANVAS_Y1
+            self::PRODUCT_CANVAS_Y1,
         ])), $activateContext->getContext());
 
-        if ($result->getTotal() > 0 ) {
+        if ($result->getTotal() > 0) {
             return;
         }
 
