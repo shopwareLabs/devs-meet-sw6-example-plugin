@@ -20,14 +20,14 @@ export default class ImageChanger extends Plugin {
 
     addEventListener() {
         this._fetchButton.addEventListener('click', this.onClickFetchRandom.bind(this));
-        this._renderButton.addEventListener('click', this.onClickFetch.bind(this));
+        this._renderButton.addEventListener('click', this.onClickRender.bind(this));
     }
 
     onClickFetchRandom() {
         this._client.get(this.options.fetchRoute, this.onFetchedImage.bind(this));
     }
 
-    onClickFetch() {
+    onClickRender() {
         const url = this._input.value;
 
         this._client.post(this.options.fetchRoute, JSON.stringify({ 'url': url, '_csrf_token': this.options.csrfToken }), this.onFetchedImage.bind(this));
