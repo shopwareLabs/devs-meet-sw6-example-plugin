@@ -92,10 +92,13 @@ class PersonalProductCartProcessor implements CartDataCollectorInterface, CartPr
             $product = $data->get('product-' . $lineItem->getReferencedId());
             $image = $images->get($lineItem->getId());
 
-            $height = (string) $this->imageService->getPersonalImageHeight($product);
-            $width = (string) $this->imageService->getPersonalImageWidth($product);
+            $height = $this->imageService->getPersonalImageHeight($product);
+            $width = $this->imageService->getPersonalImageWidth($product);
 
-            $lineItem->setPayloadValue('url', $image->getUrl())->setPayloadValue('height', $height)->setPayloadValue('width', $width);
+            $data->set('image-width-' . $lineItem->getId(), $width);
+            $data->set('image-height-' . $lineItem->getId(), $height);
+
+            $lineItem->setPayloadValue('url', $image->getUrl());
         }
     }
 
@@ -112,13 +115,16 @@ class PersonalProductCartProcessor implements CartDataCollectorInterface, CartPr
         $price = 0;
         foreach ($lineItems as $lineItem) {
             if (!$lineItem->hasPayloadValue('url')
-                || !$lineItem->hasPayloadValue('width')
-                || !$lineItem->hasPayloadValue('height')
+                || !$data->has('image-width-' . $lineItem->getId())
+                || !$data->has('image-height-' . $lineItem->getId())
             ) {
                 continue;
             }
 
-            $price += ((int) $lineItem->getPayloadValue('width') * (int) $lineItem->getPayloadValue('height')) / 10000;
+            $width = $data->get('image-width-' . $lineItem->getId());
+            $height = $data->get('image-height-' . $lineItem->getId());
+
+            $price += $lineItem->getQuantity() * $width * $height / 10000;
         }
 
         if (!$price) {
