@@ -8,7 +8,7 @@
 - go through plugin files and explain folders/files
 
 ## Adding custom fields
-- open `src/SwagPersonalProduct.php` and add explain custom fields
+- open `src/SwagPersonalProduct.php` and explain custom fields
 - use `bin/console plugin:install --activate SwagPersonalProduct` to install and activate plugin
 
 ## Example 01 - Product detail page extension
