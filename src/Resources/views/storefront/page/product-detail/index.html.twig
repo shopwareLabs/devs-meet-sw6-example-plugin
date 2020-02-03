@@ -1,7 +1,6 @@
 {% sw_extends '@Storefront/storefront/page/product-detail/index.html.twig' %}
 
 {% block page_product_detail_media %}
-    {{ dump(page) }}
     {% set customFields = page.product.customFields %}
     {% if customFields.personal_product_customizable %}
         <div class="personal-product"
