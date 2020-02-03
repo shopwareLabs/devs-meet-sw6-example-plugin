@@ -27,6 +27,6 @@ class ImageGuesser
     {
         $location = $this->picsumClient->request('GET', $width . '/' . $height)->getHeader('location')[0];
 
-        return self::SOURCE_URL . $location;
+        return $location;
     }
 }
