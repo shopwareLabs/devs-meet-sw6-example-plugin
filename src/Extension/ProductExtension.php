@@ -3,12 +3,12 @@
 namespace SwagPersonalProduct\Extension;
 
 use Shopware\Core\Content\Product\ProductDefinition;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityExtensionInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityExtension;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use SwagPersonalProduct\PersonalImage\PersonalImageDefinition;
 
-class ProductExtension implements EntityExtensionInterface
+class ProductExtension extends EntityExtension
 {
     public function extendFields(FieldCollection $collection): void
     {
