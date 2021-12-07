@@ -7,6 +7,10 @@
     <services>
         <service id="SwagPersonalProduct\Controller\PersonalProductController" public="true">
             <argument id="SwagPersonalProduct\Service\ImageService" type="service"/>
+
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
         </service>
 
         <service id="SwagPersonalProduct\PersonalImage\PersonalImageDefinition">

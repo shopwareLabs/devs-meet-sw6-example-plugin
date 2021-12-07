@@ -23,7 +23,10 @@ Shopware.Component.register('personal-product-canvas', {
 
         isCustomizable: {
             get() {
-                return this.product.customFields.personal_product_customizable || false;
+                if (!this.product.customFields) {
+                    this.product.customFields = {...this.customFields, personal_product_customizable: false}
+                }
+                return this.product.customFields?.personal_product_customizable || false;
             },
             set(value) {
                 this.$set(this.product.customFields, 'personal_product_customizable', value);
